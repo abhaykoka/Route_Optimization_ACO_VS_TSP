@@ -1,0 +1,56 @@
+{% load static %}
+<nav class="navbar navbar-expand-lg navbar-light">
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+        <div class="navbar-nav mx-auto">
+            <a class="nav-item nav-link active" href="{% url 'project_info' %}">About Our Project</a>
+            {% comment %} <a class="nav-item nav-link active" href="{% url 'products' %}">Products</a> {% endcomment %}
+        </div>
+    </div>
+</nav>
+
+<style>
+    /* Navbar styling */
+    .navbar {
+        background: linear-gradient(90deg, #ff7e5f, #feb47b); /* Colorful gradient background */
+        padding: 1rem 2rem;
+        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.15);
+    }
+
+    /* Nav links styling */
+    .navbar-nav .nav-link {
+        color: #ffffff;
+        font-size: 1.1rem;
+        font-weight: bold;
+        margin: 0 15px;
+        transition: color 0.3s, transform 0.3s;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    /* Hover effects for nav links */
+    .navbar-nav .nav-link:hover {
+        color: #ffc371; /* Lighter shade on hover */
+        transform: scale(1.1);
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Navbar toggle button customization for smaller screens */
+    .navbar-toggler {
+        border: none;
+    }
+
+    .navbar-toggler-icon {
+        background-color: #ffffff;
+        border-radius: 2px;
+        padding: 5px;
+    }
+
+    /* Active link styling */
+    .nav-item .active {
+        color: #fff;
+        border-bottom: 2px solid #fff;
+    }
+</style>

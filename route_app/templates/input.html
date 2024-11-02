@@ -1,0 +1,196 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Select Cities</title>
+    <link rel="stylesheet" href="{% static 'styles/main.css' %}">  <!-- Link to external CSS -->
+    <style>
+        /* Background and Page Layout */
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(120deg, #84fab0, #8fd3f4);
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Form and Container Styling */
+        .form-container {
+            background: rgba(255, 255, 255, 0.8);
+            padding: 20px 40px;
+            border-radius: 10px;
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+            max-width: 500px;
+            width: 100%;
+            text-align: center;
+        }
+
+        /* Heading */
+        h1 {
+            font-size: 2.2em;
+            margin-bottom: 20px;
+            color: #555;
+        }
+
+        /* Labels and Input Fields */
+        label {
+            font-size: 1em;
+            font-weight: 600;
+            color: #666;
+            margin-top: 10px;
+        }
+
+        #num-cities-input,
+        .city-dropdown {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        /* Buttons */
+        button {
+            background: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            font-size: 1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.3s;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background: #45a049;
+        }
+
+        /* Navbar */
+        nav.navbar {
+            background: linear-gradient(45deg, #00c6ff, #0072ff);
+            padding: 1rem;
+            width: 100%;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: center;
+            position: fixed;
+            top: 0;
+        }
+
+        nav .navbar-nav .nav-item {
+            margin: 0 15px;
+        }
+
+        nav .navbar-nav .nav-link {
+            color: #fff;
+            font-weight: bold;
+            font-size: 1em;
+            text-transform: uppercase;
+            text-decoration: none;
+        }
+
+        nav .navbar-nav .nav-link:hover {
+            color: #ffde59;
+        }
+
+    </style>
+    <script>
+        function generateCityDropdowns() {
+            const numCities = document.getElementById('num-cities-input').value;
+            const citiesContainer = document.getElementById('cities-container');
+            citiesContainer.innerHTML = '';  // Clear existing dropdowns
+        
+            // Available cities loaded from Django context
+            const cities = [
+                {% for city in cities %}
+                    "{{ city }}"{% if not forloop.last %}, {% endif %}
+                {% endfor %}
+            ];
+        
+            // Track the selected cities
+            const selectedCities = Array(numCities).fill(null);
+        
+            // Function to update options in all dropdowns
+            function updateDropdownOptions() {
+                for (let i = 0; i < numCities; i++) {
+                    const select = document.getElementById(`city_${i}`);
+                    const currentValue = select.value;
+        
+                    // Clear current options and repopulate
+                    select.innerHTML = '';
+                    cities.forEach(city => {
+                        if (!selectedCities.includes(city) || city === currentValue) {
+                            const option = document.createElement('option');
+                            option.value = city;
+                            option.text = city;
+                            select.appendChild(option);
+                        }
+                    });
+        
+                    // Set the current selection to avoid it resetting
+                    select.value = currentValue;
+                }
+            }
+        
+            // Create the dropdowns and add event listeners
+            for (let i = 0; i < numCities; i++) {
+                const label = document.createElement('label');
+                label.innerText = `Select City ${i + 1}`;
+                label.htmlFor = `city_${i}`;
+        
+                const select = document.createElement('select');
+                select.name = `city_${i}`;
+                select.id = `city_${i}`;
+                select.classList.add('city-dropdown');
+        
+                // Populate initial options for each dropdown
+                cities.forEach(city => {
+                    const option = document.createElement('option');
+                    option.value = city;
+                    option.text = city;
+                    select.appendChild(option);
+                });
+        
+                // Event listener to update selectedCities and refresh options
+                select.addEventListener('change', () => {
+                    selectedCities[i] = select.value;
+                    updateDropdownOptions();
+                });
+        
+                citiesContainer.appendChild(label);
+                citiesContainer.appendChild(select);
+                citiesContainer.appendChild(document.createElement('br'));
+            }
+        }
+        
+    </script>
+</head>
+<body>
+    {% include 'navbar.html'%}
+    
+    <div class="form-container">
+        <h1>Route Optimization</h1>
+        <form method="post">
+            {% csrf_token %}
+            <label for="num-cities-input">Number of Cities (Max limit 44)</label>
+            {{ form.num_cities }}
+            <button type="button" onclick="generateCityDropdowns()">Generate City Dropdowns</button>
+            
+            <div id="cities-container">
+                <!-- Dropdowns will be generated here -->
+            </div>
+            
+            <button type="submit">Submit</button>
+        </form>
+    </div>
+</body>
+</html>

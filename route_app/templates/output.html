@@ -1,0 +1,79 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Route Optimization Results</title>
+    <link rel="stylesheet" href="{% static 'styles/main.css' %}"> <!-- Link to external CSS file -->
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(to right, #ff7e5f, #feb47b); /* Multi-color gradient background */
+            color: #fff; /* White text color for better contrast */
+            margin: 0;
+            padding: 20px;
+        }
+        h1, h2 {
+            text-align: center;
+        }
+        h1 {
+            margin-bottom: 20px;
+            font-size: 2.5em;
+        }
+        h2 {
+            margin-top: 20px;
+            font-size: 2em;
+            border-bottom: 2px solid #fff; /* Underline for headings */
+            padding-bottom: 10px;
+        }
+        p {
+            font-size: 1.2em;
+            line-height: 1.5;
+            margin: 10px 0;
+            text-align: center;
+        }
+        img {
+            display: block;
+            margin: 20px auto; /* Center images */
+            max-width: 90%; /* Responsive image */
+            border: 2px solid #fff; /* White border around images */
+            border-radius: 10px; /* Rounded corners */
+        }
+        a {
+            display: inline-block;
+            margin: 20px auto;
+            padding: 10px 20px;
+            background-color: #4CAF50; /* Green button */
+            color: white;
+            text-decoration: none;
+            border-radius: 5px; /* Rounded corners */
+            transition: background-color 0.3s; /* Smooth transition */
+        }
+        a:hover {
+            background-color: #45a049; /* Darker green on hover */
+        }
+    </style>
+</head>
+<body>
+    <h1>Optimal Routes Using Two Approaches</h1>
+    
+    <h2>Optimal TSP Approach</h2>
+    <p>Selected Cities: <strong>{{ selected_cities }}</strong></p>
+    <p>Optimal Path: <strong>{{ optimal_route }}</strong></p>
+    <p>Full Sequence of Cities Traversed: <strong>{{ full_sequence }}</strong></p>
+    <p>Total Distance: <strong>{{ total_distance }}</strong> km</p>
+    <p>Execution Time: <strong>{{ execution_time }}</strong> ms</p>
+    <img src="/{{ plot_path }}" alt="Optimal TSP Execution Time Plot">
+
+    <h2>Ant Colony Approach</h2>
+    <p>Selected Cities: <strong>{{ selected_cities }}</strong></p>
+    <p>Optimal Path: <strong>{{ optimal_route_aco }}</strong></p>
+    <p>Full Sequence of Cities Traversed: <strong>{{ full_sequence_aco }}</strong></p>
+    <p>Total Distance: <strong>{{ total_distance_aco }}</strong> km</p>
+    <p>Execution Time: <strong>{{ execution_time_aco }}</strong> ms</p>
+    <img src="/{{ Aco_path }}" alt="Optimal ACO Execution Time Plot">
+
+    <a href="{% url 'input' %}">Go Back</a>
+</body>
+</html>
