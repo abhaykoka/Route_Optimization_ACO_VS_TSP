@@ -23,7 +23,6 @@ pypiwin32==223
 python-dateutil==2.9.0.post0
 pyttsx3==2.90
 pytz==2024.2
-pywin32==306
 pywin32-ctypes==0.2.2
 six==1.16.0
 sqlparse==0.4.4
