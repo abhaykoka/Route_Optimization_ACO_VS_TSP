@@ -105,28 +105,36 @@
     </style>
     <script>
         function generateCityDropdowns() {
-            const numCities = document.getElementById('num-cities-input').value;
-            const citiesContainer = document.getElementById('cities-container');
-            citiesContainer.innerHTML = '';  // Clear existing dropdowns
+            let numCities = document.getElementById('num-cities-input').value;
         
-            // Available cities loaded from Django context
+            if (numCities > 44) {
+                alert("The maximum limit is 44 cities.");
+                return; // Stop further execution if the input exceeds the limit
+            }
+        
+            const citiesContainer = document.getElementById('cities-container');
+            citiesContainer.innerHTML = '';
+        
             const cities = [
                 {% for city in cities %}
                     "{{ city }}"{% if not forloop.last %}, {% endif %}
                 {% endfor %}
             ];
         
-            // Track the selected cities
             const selectedCities = Array(numCities).fill(null);
         
-            // Function to update options in all dropdowns
             function updateDropdownOptions() {
                 for (let i = 0; i < numCities; i++) {
                     const select = document.getElementById(`city_${i}`);
                     const currentValue = select.value;
-        
-                    // Clear current options and repopulate
                     select.innerHTML = '';
+                    const placeholderOption = document.createElement('option');
+                    placeholderOption.text = 'Select a City';
+                    placeholderOption.value = '';
+                    placeholderOption.disabled = true;
+                    placeholderOption.selected = true;
+                    select.appendChild(placeholderOption);
+        
                     cities.forEach(city => {
                         if (!selectedCities.includes(city) || city === currentValue) {
                             const option = document.createElement('option');
@@ -136,23 +144,28 @@
                         }
                     });
         
-                    // Set the current selection to avoid it resetting
                     select.value = currentValue;
                 }
             }
         
-            // Create the dropdowns and add event listeners
             for (let i = 0; i < numCities; i++) {
                 const label = document.createElement('label');
                 label.innerText = `Select City ${i + 1}`;
                 label.htmlFor = `city_${i}`;
+                label.classList.add('city-label');
         
                 const select = document.createElement('select');
                 select.name = `city_${i}`;
                 select.id = `city_${i}`;
                 select.classList.add('city-dropdown');
         
-                // Populate initial options for each dropdown
+                const placeholderOption = document.createElement('option');
+                placeholderOption.text = 'Select a City';
+                placeholderOption.value = '';
+                placeholderOption.disabled = true;
+                placeholderOption.selected = true;
+                select.appendChild(placeholderOption);
+        
                 cities.forEach(city => {
                     const option = document.createElement('option');
                     option.value = city;
@@ -160,7 +173,6 @@
                     select.appendChild(option);
                 });
         
-                // Event listener to update selectedCities and refresh options
                 select.addEventListener('change', () => {
                     selectedCities[i] = select.value;
                     updateDropdownOptions();
@@ -172,12 +184,13 @@
             }
         }
         
+        
     </script>
 </head>
 <body>
     {% include 'navbar.html'%}
     
-    <div class="form-container">
+    <div class="form-container" style="position: absolute;top: 100px; z-index: 20">
         <h1>Route Optimization</h1>
         <form method="post">
             {% csrf_token %}
